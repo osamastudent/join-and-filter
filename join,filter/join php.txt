@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<?php
+session_start();
+include'header.php';
+?>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"/>
+ 
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+    <title>home page</title>
+  <body>
+  <?php
+    include'sidebar.php';
+include'navbar.php';
+include'../conn.php';
+?>
+<h1 class="text-center">Customer Lawyers Total Record</h1><br>
+<div class="row">
+<div class="col-md-4">
+<?php
+
+$selectrows=mysqli_query($conn,"select * from appointment");
+$count=mysqli_num_rows($selectrows);
+?>
+
+
+
+<span class="fs-1"> Total Record: (<?php echo $count ?>)</span>
+</div>
+
+<div class="col-md-8">
+<div class="input-group">
+<input type="text" class="w-75 " style="border-top-left-radius: 2rem;border-bottom-left-radius: 2rem;" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+<button type="submit" class="btn btn-primary">search</button>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<table class="table" id="myTable" >
+<thead>
+<tr>
+<th scope="col">Index</th>
+<th scope="col">Lawyer Name</th>
+<th scope="col">Lawyer Email</th>
+<th scope="col">User name</th>
+<th scope="col">User Email</th>
+<th scope="col">Date Time</th>
+<th scope="col">Location</th>
+</tr>
+</thead>
+<tbody>
+<?php  
+include'../conn.php';
+$select=mysqli_query($conn,"SELECT l.l_name, l.l_email , lu.lu_name, lu.lu_email,ap.ap_timedate,ap.ap_location from appointment as ap
+JOIN
+lawyer AS l
+ON
+l.l_id=ap.l_fk_id
+JOIN
+lawuser as lu
+ON
+lu.lu_id=ap.lu_fk_id
+
+");
+$key=0;
+while($row=mysqli_fetch_array($select))
+{
+    $key++;
+?>
+<tr>
+        <td scope="row"><?php echo $key ?></td>
+        <td scope="row"><?php echo $row["l_name"]?></td>
+<td scope="row"><?php echo $row["l_email"]?></td>
+<td scope="row"><?php echo $row["lu_name"]?></td>
+<td scope="row"><?php echo $row["lu_email"]?></td>
+<td scope="row"><?php echo $row["ap_timedate"]?></td>
+<td scope="row"><?php echo $row["ap_location"]?></td>
+</tr>
+
+<?php
+}
+?>
+
+
+</tbody>
+</table>
+
+
+
+</div>
+</div>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+<br><hr><h1 class="text-center">users record</h1><hr>
+
+
+<!--users record start-->
+<div class="row">
+<div class="col-md-4">
+<?php
+$selectrowss=mysqli_query($conn,"select * from appointment");
+$countt=mysqli_num_rows($selectrowss);
+?>
+<span class="fs-1 "> Total Record: (<?php echo $countt ?>)</span>
+</div>
+
+<div class="col-md-8">
+<div class="input-group">
+<input type="text" class="w-75 " style="border-top-left-radius: 2rem;border-bottom-left-radius: 2rem;" id="myInputt" onkeyup="myFunction()" placeholder="Search for names..">
+<button type="submit" class="btn btn-primary">search</button>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<table class="table" id="myTablee" >
+<thead>
+<tr>
+<th scope="col">Index</th>
+<th scope="col">Lawyer Name</th>
+<th scope="col">Lawyer Email</th>
+<th scope="col">User name</th>
+<th scope="col">User Email</th>
+<th scope="col">Date Time</th>
+<th scope="col">Location</th>
+</tr>
+</thead>
+<tbody>
+<?php  
+include'../conn.php';
+$selected=mysqli_query($conn,"SELECT l.l_name, l.l_email , lu.u_name, lu.u_email,ap.ap_timedate,ap.ap_location from appointment as ap
+JOIN
+lawyer AS l
+ON
+l.l_id=ap.l_fk_id
+JOIN
+users as lu
+ON
+lu.u_id=ap.u_fk_id
+
+");
+$key=0;
+while($data=mysqli_fetch_array($selected))
+{
+    $key++;
+?>
+<tr>
+        <td scope="row"><?php echo $key ?></td>
+        <td scope="row"><?php echo $data["l_name"]?></td>
+<td scope="row"><?php echo $data["l_email"]?></td>
+<td scope="row"><?php echo $data["u_name"]?></td>
+<td scope="row"><?php echo $data["u_email"]?></td>
+<td scope="row"><?php echo $data["ap_timedate"]?></td>
+<td scope="row"><?php echo $data["ap_location"]?></td>
+</tr>
+
+<?php
+}
+?>
+
+
+</tbody>
+</table>
+
+<script>
+$(document).ready(function(){
+  $("#myInputt").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTablee tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+
+</div>
+</div>
+
+
+
+
+
+
+<br><br>
+
+
+
+
+
+  <?php
+include'foot.php';
+include'script.php';
+?>
+</body>
+</html>
+
+
